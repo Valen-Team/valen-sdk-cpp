@@ -1,0 +1,27 @@
+{
+  "state": "I moved. Please ship my order to 12 Elm Street instead.",
+  "questions": {
+    "intent": {
+      "type": "choice",
+      "instructions": "What does the customer want?",
+      "criteria": {
+        "address": "Change the delivery address",
+        "cancel": "Cancel the order"
+      }
+    },
+    "change_address": {
+      "type": "noul",
+      "instructions": "The customer requests a delivery address change."
+    },
+    "explicitness": {
+      "type": "score",
+      "instructions": "How explicit is the request?",
+      "criteria": [
+        "No request",
+        "Asks whether a change is possible",
+        "Explicitly requests a change"
+      ]
+    }
+  },
+  "execution": "shared_state"
+}
