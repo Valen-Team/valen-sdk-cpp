@@ -88,3 +88,5 @@ cat examples/request.json | ./build/valen-cpp models/Valen-0.8B-ONNX -
 [main.cpp](main.cpp) 包含文本编译、ORT 推理和结果处理；[native/](native) 使用 Hugging Face tokenizers 与 MiniJinja 实现分词和模板渲染；[vendor/](vendor) 保存 ORT 头文件与 JSON 解析库。
 
 Valen 为 Apache-2.0，见 [LICENSE](LICENSE)。ORT 和 nlohmann/json 为 MIT；tokenizers、MiniJinja 为 Apache-2.0，许可随依赖或源码提供。
+
+用户指南唯一维护在官网：[Documentation](https://valen-team.github.io/zh-Hans/docs/) · [Fine-tuning](https://valen-team.github.io/zh-Hans/docs/valen/training/) · [Probabilities](https://valen-team.github.io/zh-Hans/docs/valen/probabilities/) · [Cookbook](https://valen-team.github.io/zh-Hans/cookbook/).

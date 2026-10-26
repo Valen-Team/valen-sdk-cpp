@@ -88,3 +88,5 @@ cat examples/request.json | ./build/valen-cpp models/Valen-0.8B-ONNX -
 [main.cpp](main.cpp) contains text compilation, ORT inference and result handling. [native/](native) uses Hugging Face tokenizers and MiniJinja for tokenization and template rendering. [vendor/](vendor) contains the ORT headers and JSON parser.
 
 Valen is Apache-2.0; see [LICENSE](LICENSE). ORT and nlohmann/json are MIT; tokenizers and MiniJinja are Apache-2.0, with licenses distributed with their source or dependencies.
+
+User guides are maintained only on the website: [Documentation](https://valen-team.github.io/docs/) · [Fine-tuning](https://valen-team.github.io/docs/valen/training/) · [Probabilities](https://valen-team.github.io/docs/valen/probabilities/) · [Cookbook](https://valen-team.github.io/cookbook/).
