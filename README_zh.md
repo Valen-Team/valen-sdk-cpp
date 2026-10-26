@@ -20,6 +20,11 @@
 
 当前入口是 **SystemOne 文本、FP32 CPU、每次进程处理一个请求**。图片、视频、Decisions 和 HTTP 接入使用 [Python SDK](https://github.com/valen-team/valen-sdk-python) 或 [JavaScript SDK](https://github.com/valen-team/valen-sdk-js)。
 
+## 完整应用教程
+
+完整业务流程只在[官网 Cookbook](https://valen-team.github.io/zh-Hans/cookbook/)维护：[工单分流](https://valen-team.github.io/zh-Hans/cookbook/ticket-routing/)、[商品图片筛选](https://valen-team.github.io/zh-Hans/cookbook/product-screening/)、[短视频标注](https://valen-team.github.io/zh-Hans/cookbook/video-tagging/)。代码、样例和实测结果来自同一维护源。本仓库保留 SDK 接口与安装示例；Python/JavaScript SDK 的 `Valen.local` 是 ONNX 路径，GGUF 服务使用其远程 HTTP 客户端。C++ 集成的支持范围以本仓库说明为准。
+
+
 ## 准备
 
 需要 C++17 编译器、CMake 3.19+、[Rust/Cargo](https://www.rust-lang.org/tools/install)、Git、curl 和 jq。Rust 用于构建 tokenizer 和模板处理静态库，推理直接在 C++ 进程中完成。

@@ -20,6 +20,11 @@ Run Valen text decisions inside a C++ process and turn natural language into cat
 
 The current entry point supports **SystemOne text, FP32 CPU and one request per process**. For images, video, Decisions or HTTP, use the [Python SDK](https://github.com/valen-team/valen-sdk-python) or [JavaScript SDK](https://github.com/valen-team/valen-sdk-js).
 
+## Complete application tutorials
+
+Complete workflows are maintained in the [official Cookbook](https://valen-team.github.io/cookbook/): [ticket routing](https://valen-team.github.io/cookbook/ticket-routing/), [product-image screening](https://valen-team.github.io/cookbook/product-screening/) and [video tagging](https://valen-team.github.io/cookbook/video-tagging/). Code, samples and measured outputs share one source. This repository retains SDK interface and installation examples. In the Python/JavaScript SDKs, `Valen.local` loads ONNX and `Valen.remote` connects to GGUF HTTP services. C++ support remains scoped by this repository's reference.
+
+
 ## Prerequisites
 
 Use a C++17 compiler, CMake 3.19+, [Rust/Cargo](https://www.rust-lang.org/tools/install), Git, curl and jq. Rust builds the tokenizer and template static library; inference runs directly in the C++ process.
