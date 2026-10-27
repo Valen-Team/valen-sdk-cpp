@@ -22,7 +22,7 @@
 
 ## 完整应用教程
 
-完整业务流程只在[官网 Cookbook](https://valen-team.github.io/zh-Hans/cookbook/)维护：[工单分流](https://valen-team.github.io/zh-Hans/cookbook/ticket-routing/)、[商品图片筛选](https://valen-team.github.io/zh-Hans/cookbook/product-screening/)、[短视频标注](https://valen-team.github.io/zh-Hans/cookbook/video-tagging/)。代码、样例和实测结果来自同一维护源。本仓库保留 SDK 接口与安装示例；Python/JavaScript SDK 的 `Valen.local` 是 ONNX 路径，GGUF 服务使用其远程 HTTP 客户端。C++ 集成的支持范围以本仓库说明为准。
+完整业务流程只在[官网 Cookbook](https://valen-team.github.io/zh-Hans/cookbook/)维护：[工单分流](https://valen-team.github.io/zh-Hans/cookbook/ticket-routing/)、[候选项都不对](https://valen-team.github.io/zh-Hans/cookbook/unknown-categories/)、[商品图片筛选](https://valen-team.github.io/zh-Hans/cookbook/product-screening/)、[短视频标注](https://valen-team.github.io/zh-Hans/cookbook/video-tagging/)。代码、样例和实测结果来自同一维护源。本仓库保留 SDK 接口与安装示例；Python/JavaScript SDK 的 `Valen.local` 是 ONNX 路径，GGUF 服务使用其远程 HTTP 客户端。C++ 集成的支持范围以本仓库说明为准。
 
 
 ## 准备

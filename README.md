@@ -22,7 +22,7 @@ The current entry point supports **SystemOne text, FP32 CPU and one request per 
 
 ## Complete application tutorials
 
-Complete workflows are maintained in the [official Cookbook](https://valen-team.github.io/cookbook/): [ticket routing](https://valen-team.github.io/cookbook/ticket-routing/), [product-image screening](https://valen-team.github.io/cookbook/product-screening/) and [video tagging](https://valen-team.github.io/cookbook/video-tagging/). Code, samples and measured outputs share one source. This repository retains SDK interface and installation examples. In the Python/JavaScript SDKs, `Valen.local` loads ONNX and `Valen.remote` connects to GGUF HTTP services. C++ support remains scoped by this repository's reference.
+Complete workflows are maintained in the [official Cookbook](https://valen-team.github.io/cookbook/): [ticket routing](https://valen-team.github.io/cookbook/ticket-routing/), [when no option fits](https://valen-team.github.io/cookbook/unknown-categories/), [product-image screening](https://valen-team.github.io/cookbook/product-screening/) and [video tagging](https://valen-team.github.io/cookbook/video-tagging/). Code, samples and measured outputs share one source. This repository retains SDK interface and installation examples. In the Python/JavaScript SDKs, `Valen.local` loads ONNX and `Valen.remote` connects to GGUF HTTP services. C++ support remains scoped by this repository's reference.
 
 
 ## Prerequisites
