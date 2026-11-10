@@ -16,9 +16,9 @@
 
 [Valen](https://github.com/Valen-Team/Valen) is a multimodal System One decision model that returns structured decision probabilities for your tasks. This repository is the Valen family’s native C++ text integration example.
 
-Run Valen text decisions inside a C++ process and turn natural language into categories, yes/no probabilities and scores. This repository provides a complete command-line integration example: read SystemOne JSON, compile text and call ONNX Runtime directly. Use the `Model` and text compiler in [main.cpp](main.cpp) as a starting point for a native application.
+Run Valen text decisions inside a C++ process and turn natural language into categories, yes/no probabilities and scores. This repository provides a complete command-line integration example: read SystemOne JSON, compile text and call ONNX Runtime directly. Use the `Model` and text compiler in [valen.hpp](valen.hpp) as a starting point for a native application.
 
-The current entry point supports **SystemOne text, FP32 CPU and one request per process**. For images, video, Decisions or HTTP, use the [Python SDK](https://github.com/valen-team/valen-sdk-python) or [JavaScript SDK](https://github.com/valen-team/valen-sdk-js).
+The current entry point supports **SystemOne text, FP32 CPU and one request per process**, and runs both Valen-Decision-1.5 and Valen-Decision-1.0 ONNX bundles: it reads the model generation from the bundle's `config.json`, so the same binary serves either. For images, video, Decisions or HTTP, use the [Python SDK](https://github.com/valen-team/valen-sdk-python) or [JavaScript SDK](https://github.com/valen-team/valen-sdk-js).
 
 ## Complete application tutorials
 
@@ -29,7 +29,7 @@ Complete workflows are maintained in the [official Cookbook](https://valen-team.
 
 Use a C++17 compiler, CMake 3.19+, [Rust/Cargo](https://www.rust-lang.org/tools/install), Git, curl and jq. Rust builds the tokenizer and template static library; inference runs directly in the C++ process.
 
-Download the code and the Valen-Decision-1.0 0.8B CPU text model files:
+Download the code and the Valen-Decision-1.5 0.8B CPU text model files:
 
 ```bash
 git clone https://github.com/valen-team/valen-sdk-cpp.git
@@ -37,7 +37,11 @@ cd valen-sdk-cpp
 bash examples/download-model.sh
 ```
 
-[The download script](examples/download-model.sh) selects only the graphs, weights and configuration required for text inference and saves them under `models/Valen-0.8B-ONNX`. It skips vision and other precisions. This example runs the Valen-Decision-1.0 ONNX models; for larger models, see the [2B](https://huggingface.co/Valen-Team/Valen-2B-ONNX) and [4B](https://huggingface.co/Valen-Team/Valen-4B-ONNX) FP32 variants.
+[The download script](examples/download-model.sh) selects only the graphs, weights and configuration required for text inference and saves them under `models/Valen-Decision-1.5-0.8B-ONNX`. It skips vision, grounding and other precisions. Set `VALEN_REPO` to fetch another bundle, for example a larger Valen-Decision-1.5 size or a Valen-Decision-1.0 model:
+
+```bash
+VALEN_REPO=Valen-Team/Valen-Decision-1.5-2B-ONNX bash examples/download-model.sh
+```
 
 ## Build
 
@@ -61,12 +65,12 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DORT_LIBRARY="$PWD/onnxruntime-l
 cmake --build build --config Release
 ```
 
-These commands use [official ONNX Runtime binaries](https://github.com/microsoft/onnxruntime/releases/tag/v1.31.0). Real-model validation covers 0.8B on macOS ARM; the Linux build has not been tested.
+These commands use [official ONNX Runtime binaries](https://github.com/microsoft/onnxruntime/releases/tag/v1.31.0). The build also produces `valen-cpp-tests`, which checks the Valen-Decision-1.5 compiler segments, block attention masks and Noul criteria; run it with `ctest --test-dir build`. Real-model validation covers Valen-Decision-1.5 0.8B on macOS ARM, matching the Python SDK; the Linux build has not been tested.
 
 ## Run
 
 ```bash
-./build/valen-cpp models/Valen-0.8B-ONNX examples/request.json
+./build/valen-cpp models/Valen-Decision-1.5-0.8B-ONNX examples/request.json
 ```
 
 [request.json](examples/request.json) asks a choice, yes/no and score question about one customer message. The program prints JSON with these fields:
@@ -77,15 +81,15 @@ These commands use [official ONNX Runtime binaries](https://github.com/microsoft
 | `answers.change_address.noul` | Probability of an address-change request, from 0 to 1 |
 | `answers.explicitness.score` | Request explicitness, from 0 to 2 |
 
-Edit `state`, question instructions and candidates to use your own task. `execution` supports `shared_state` and `question`. Read a request from stdin:
+Edit `state`, question instructions and candidates to use your own task. With Valen-Decision-1.5, a `noul` question can also carry `criteria` with `true` and `false` descriptions, which the compiler folds into the instructions. `execution` is `shared_state`, where every question reads one shared sequence under block attention; Valen-Decision-1.0 bundles also accept `question`. Read a request from stdin:
 
 ```bash
-cat examples/request.json | ./build/valen-cpp models/Valen-0.8B-ONNX -
+cat examples/request.json | ./build/valen-cpp models/Valen-Decision-1.5-0.8B-ONNX -
 ```
 
 ## Source and license
 
-[main.cpp](main.cpp) contains text compilation, ORT inference and result handling. [native/](native) uses Hugging Face tokenizers and MiniJinja for tokenization and template rendering. [vendor/](vendor) contains the ORT headers and JSON parser.
+[valen.hpp](valen.hpp) contains text compilation, the Valen-Decision-1.5 block attention mask, ORT inference and result handling; [main.cpp](main.cpp) is the command-line entry point and [tests/](tests) holds the compiler tests. [native/](native) uses Hugging Face tokenizers and MiniJinja for tokenization and template rendering. [vendor/](vendor) contains the ORT headers and JSON parser.
 
 Valen is Apache-2.0; see [LICENSE](LICENSE). ORT and nlohmann/json are MIT; tokenizers and MiniJinja are Apache-2.0, with licenses distributed with their source or dependencies.
 

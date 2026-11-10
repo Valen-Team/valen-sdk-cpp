@@ -16,9 +16,9 @@
 
 [Valen（万澜）](https://github.com/Valen-Team/Valen) 是多模态 System One 决策模型，面向给定任务输出结构化决策概率。本仓库是 Valen 系列的原生 C++ 文本集成示例。
 
-在 C++ 进程中运行 Valen 的文本决策，将自然语言转换为类别、是非概率和评分。本仓库提供完整的命令行集成示例：读取 SystemOne JSON，编译文本并直接调用 ONNX Runtime。可将 [main.cpp](main.cpp) 中的 `Model` 与文本编译代码作为原生应用集成的起点。
+在 C++ 进程中运行 Valen 的文本决策，将自然语言转换为类别、是非概率和评分。本仓库提供完整的命令行集成示例：读取 SystemOne JSON，编译文本并直接调用 ONNX Runtime。可将 [valen.hpp](valen.hpp) 中的 `Model` 与文本编译代码作为原生应用集成的起点。
 
-当前入口是 **SystemOne 文本、FP32 CPU、每次进程处理一个请求**。图片、视频、Decisions 和 HTTP 接入使用 [Python SDK](https://github.com/valen-team/valen-sdk-python) 或 [JavaScript SDK](https://github.com/valen-team/valen-sdk-js)。
+当前入口是 **SystemOne 文本、FP32 CPU、每次进程处理一个请求**，可运行 Valen-Decision-1.5 与 Valen-Decision-1.0 的 ONNX 模型包：程序从模型包的 `config.json` 读取模型代际，同一个可执行文件即可服务两代模型。图片、视频、Decisions 和 HTTP 接入使用 [Python SDK](https://github.com/valen-team/valen-sdk-python) 或 [JavaScript SDK](https://github.com/valen-team/valen-sdk-js)。
 
 ## 完整应用教程
 
@@ -29,7 +29,7 @@
 
 需要 C++17 编译器、CMake 3.19+、[Rust/Cargo](https://www.rust-lang.org/tools/install)、Git、curl 和 jq。Rust 用于构建 tokenizer 和模板处理静态库，推理直接在 C++ 进程中完成。
 
-下载代码和 Valen-Decision-1.0 0.8B 的 CPU 文本模型文件：
+下载代码和 Valen-Decision-1.5 0.8B 的 CPU 文本模型文件：
 
 ```bash
 git clone https://github.com/valen-team/valen-sdk-cpp.git
@@ -37,7 +37,11 @@ cd valen-sdk-cpp
 bash examples/download-model.sh
 ```
 
-[下载脚本](examples/download-model.sh) 根据模型清单获取文本推理需要的图、权重和配置，保存在 `models/Valen-0.8B-ONNX`；不下载视觉或其他精度的权重。本示例使用 Valen-Decision-1.0 的 ONNX 模型；需要更大模型时，可参考 [2B](https://huggingface.co/Valen-Team/Valen-2B-ONNX) 和 [4B](https://huggingface.co/Valen-Team/Valen-4B-ONNX) 的 FP32 变体。
+[下载脚本](examples/download-model.sh) 根据模型清单获取文本推理需要的图、权重和配置，保存在 `models/Valen-Decision-1.5-0.8B-ONNX`；不下载视觉、定位或其他精度的权重。设置 `VALEN_REPO` 可下载其他模型包，例如更大的 Valen-Decision-1.5 或 Valen-Decision-1.0 模型：
+
+```bash
+VALEN_REPO=Valen-Team/Valen-Decision-1.5-2B-ONNX bash examples/download-model.sh
+```
 
 ## 构建
 
@@ -61,12 +65,12 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DORT_LIBRARY="$PWD/onnxruntime-l
 cmake --build build --config Release
 ```
 
-以上命令使用 [ONNX Runtime 官方发行包](https://github.com/microsoft/onnxruntime/releases/tag/v1.31.0)。本示例已在 macOS ARM 上完成 0.8B 真实模型验证；Linux 构建尚未实测。
+以上命令使用 [ONNX Runtime 官方发行包](https://github.com/microsoft/onnxruntime/releases/tag/v1.31.0)。构建同时生成 `valen-cpp-tests`，检查 Valen-Decision-1.5 的编译分段、块注意力掩码和 Noul 判据，用 `ctest --test-dir build` 运行。本示例已在 macOS ARM 上完成 Valen-Decision-1.5 0.8B 真实模型验证，结果与 Python SDK 一致；Linux 构建尚未实测。
 
 ## 运行
 
 ```bash
-./build/valen-cpp models/Valen-0.8B-ONNX examples/request.json
+./build/valen-cpp models/Valen-Decision-1.5-0.8B-ONNX examples/request.json
 ```
 
 [request.json](examples/request.json) 包含同一段客户消息的分类、是非和评分问题。输出为 JSON，主要字段：
@@ -77,15 +81,15 @@ cmake --build build --config Release
 | `answers.change_address.noul` | 客户要求改地址的概率，范围 0–1 |
 | `answers.explicitness.score` | 请求明确程度，范围 0–2 |
 
-可编辑请求中的 `state`、问题说明和候选类别。`execution` 支持 `shared_state` 和 `question`；程序也可从 stdin 读取请求：
+可编辑请求中的 `state`、问题说明和候选类别。使用 Valen-Decision-1.5 时，`noul` 问题还可以带 `criteria`（`true` 与 `false` 两条描述），编译器会把它并入问题说明。`execution` 为 `shared_state`，所有问题在块注意力下读取同一条共享序列；Valen-Decision-1.0 模型包另支持 `question`。程序也可从 stdin 读取请求：
 
 ```bash
-cat examples/request.json | ./build/valen-cpp models/Valen-0.8B-ONNX -
+cat examples/request.json | ./build/valen-cpp models/Valen-Decision-1.5-0.8B-ONNX -
 ```
 
 ## 代码与许可
 
-[main.cpp](main.cpp) 包含文本编译、ORT 推理和结果处理；[native/](native) 使用 Hugging Face tokenizers 与 MiniJinja 实现分词和模板渲染；[vendor/](vendor) 保存 ORT 头文件与 JSON 解析库。
+[valen.hpp](valen.hpp) 包含文本编译、Valen-Decision-1.5 块注意力掩码、ORT 推理和结果处理，[main.cpp](main.cpp) 是命令行入口，[tests/](tests) 保存编译器测试；[native/](native) 使用 Hugging Face tokenizers 与 MiniJinja 实现分词和模板渲染；[vendor/](vendor) 保存 ORT 头文件与 JSON 解析库。
 
 Valen 为 Apache-2.0，见 [LICENSE](LICENSE)。ORT 和 nlohmann/json 为 MIT；tokenizers、MiniJinja 为 Apache-2.0，许可随依赖或源码提供。
 
