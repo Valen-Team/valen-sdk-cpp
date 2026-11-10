@@ -29,7 +29,7 @@
 
 需要 C++17 编译器、CMake 3.19+、[Rust/Cargo](https://www.rust-lang.org/tools/install)、Git、curl 和 jq。Rust 用于构建 tokenizer 和模板处理静态库，推理直接在 C++ 进程中完成。
 
-下载代码和 0.8B 的 CPU 文本模型文件：
+下载代码和 Valen-Decision-1.0 0.8B 的 CPU 文本模型文件：
 
 ```bash
 git clone https://github.com/valen-team/valen-sdk-cpp.git
@@ -37,7 +37,7 @@ cd valen-sdk-cpp
 bash examples/download-model.sh
 ```
 
-[下载脚本](examples/download-model.sh) 根据模型清单获取文本推理需要的图、权重和配置，保存在 `models/Valen-0.8B-ONNX`；不下载视觉或其他精度的权重。需要更大模型时，可参考 [2B](https://huggingface.co/Valen-Team/Valen-2B-ONNX) 和 [4B](https://huggingface.co/Valen-Team/Valen-4B-ONNX) 的 FP32 变体。
+[下载脚本](examples/download-model.sh) 根据模型清单获取文本推理需要的图、权重和配置，保存在 `models/Valen-0.8B-ONNX`；不下载视觉或其他精度的权重。本示例使用 Valen-Decision-1.0 的 ONNX 模型；需要更大模型时，可参考 [2B](https://huggingface.co/Valen-Team/Valen-2B-ONNX) 和 [4B](https://huggingface.co/Valen-Team/Valen-4B-ONNX) 的 FP32 变体。
 
 ## 构建
 

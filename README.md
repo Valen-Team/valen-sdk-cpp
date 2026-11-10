@@ -29,7 +29,7 @@ Complete workflows are maintained in the [official Cookbook](https://valen-team.
 
 Use a C++17 compiler, CMake 3.19+, [Rust/Cargo](https://www.rust-lang.org/tools/install), Git, curl and jq. Rust builds the tokenizer and template static library; inference runs directly in the C++ process.
 
-Download the code and 0.8B CPU text model files:
+Download the code and the Valen-Decision-1.0 0.8B CPU text model files:
 
 ```bash
 git clone https://github.com/valen-team/valen-sdk-cpp.git
@@ -37,7 +37,7 @@ cd valen-sdk-cpp
 bash examples/download-model.sh
 ```
 
-[The download script](examples/download-model.sh) selects only the graphs, weights and configuration required for text inference and saves them under `models/Valen-0.8B-ONNX`. It skips vision and other precisions. For larger models, see the [2B](https://huggingface.co/Valen-Team/Valen-2B-ONNX) and [4B](https://huggingface.co/Valen-Team/Valen-4B-ONNX) FP32 variants.
+[The download script](examples/download-model.sh) selects only the graphs, weights and configuration required for text inference and saves them under `models/Valen-0.8B-ONNX`. It skips vision and other precisions. This example runs the Valen-Decision-1.0 ONNX models; for larger models, see the [2B](https://huggingface.co/Valen-Team/Valen-2B-ONNX) and [4B](https://huggingface.co/Valen-Team/Valen-4B-ONNX) FP32 variants.
 
 ## Build
 
